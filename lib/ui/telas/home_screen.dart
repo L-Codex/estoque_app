@@ -33,6 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('EstoqueApp'),
         actions: [
           IconButton(
+            tooltip: 'Catálogo (API)',
+            onPressed: () async {
+              await Navigator.pushNamed(context, Rotas.catalogo);
+              _recarregar(); // ao voltar, relê o banco (pode ter importado)
+            },
+            icon: const Icon(Icons.cloud_download_outlined),
+          ),
+          IconButton(
             tooltip: 'Sair',
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, Rotas.login),
@@ -62,6 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Text(p.nome),
                   subtitle: Text('${p.categoria}  -  Qtd: ${p.quantidade}'),
                   trailing: Text('R\$ ${p.preco.toStringAsFixed(2)}'),
+                  // Toque no produto -> abre a tela de movimentação.
+                  onTap: () async {
+                    await Navigator.pushNamed(
+                      context,
+                      Rotas.movimentacao,
+                      arguments: p, // envia o produto escolhido
+                    );
+                    _recarregar(); // ao voltar, o saldo pode ter mudado
+                  },
                 ),
               );
             },
